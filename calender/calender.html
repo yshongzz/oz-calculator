@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>달력 가계부 메모장</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      #calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+      }
+      .day {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+      }
+      #memoModal textarea {
+        width: 100%;
+        height: 150px;
+      }
+    </style>
+  </head>
+  <body class="container py-4">
+    <h1 class="mb-4">달력 가계부 메모장</h1>
+
+    <div id="calendar" class="mb-4"></div>
+
+    <!-- 메모 모달 -->
+    <div
+      class="modal fade"
+      id="memoModal"
+      tabindex="-1"
+      aria-labelledby="memoModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="memoModalLabel">
+              메모장 - <span id="selectedDate"></span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <textarea id="memoText"></textarea>
+            <button id="calcBtn" class="btn btn-primary mt-2">계산하기</button>
+            <div class="mt-2">총 합계: <span id="totalSum">0</span></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const calendar = document.getElementById("calendar");
+      const memoModal = new bootstrap.Modal(
+        document.getElementById("memoModal")
+      );
+      const selectedDateEl = document.getElementById("selectedDate");
+      const memoText = document.getElementById("memoText");
+      const totalSumEl = document.getElementById("totalSum");
+
+      const memos = {}; // 날짜별 메모 저장
+
+      // 달력 생성 (1~30일 예시)
+      for (let i = 1; i <= 30; i++) {
+        const day = document.createElement("div");
+        day.classList.add("day");
+        day.textContent = i;
+        day.addEventListener("click", () => openMemo(i));
+        calendar.appendChild(day);
+      }
+
+      function openMemo(day) {
+        selectedDateEl.textContent = `${day}일`;
+        memoText.value = memos[day] || "";
+        totalSumEl.textContent = calculateSum(memoText.value);
+        memoModal.show();
+      }
+
+      document.getElementById("calcBtn").addEventListener("click", () => {
+        const sum = calculateSum(memoText.value);
+        totalSumEl.textContent = sum;
+        memos[selectedDateEl.textContent.replace("일", "")] = memoText.value;
+      });
+
+      function calculateSum(text) {
+        const numbers = text.match(/\d+/g);
+        return numbers ? numbers.map(Number).reduce((a, b) => a + b, 0) : 0;
+      }
+    </script>
+  </body>
+</html>

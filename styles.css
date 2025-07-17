@@ -2,7 +2,7 @@ body {
   background-color: #f8f9fa;
 }
 .calculator-container {
-  max-width: 400px;
+  max-width: 100%;
   margin: 50px auto;
   padding: 20px;
   background-color: white;
@@ -25,4 +25,11 @@ body {
 }
 .result-alert {
   margin-top: 10px;
+}
+.memo-container {
+  min-height: 400px;
+}
+#historyList {
+  max-height: 300px;
+  overflow-y: auto;
 }
